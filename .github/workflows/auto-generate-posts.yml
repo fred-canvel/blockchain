@@ -1,0 +1,42 @@
+name: Auto Generate Blog Posts
+
+on:
+  schedule:
+    # 9 AM EST (14:00 UTC) - Primera publicación del día
+    - cron: '0 14 * * *'
+    # 6 PM EST (23:00 UTC) - Segunda publicación del día
+    - cron: '0 23 * * *'
+  
+  # Permite ejecutar manualmente desde GitHub
+  workflow_dispatch:
+
+jobs:
+  generate-post:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Generate new blog post
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npm run generate-post
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/data/posts.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-generated blog post - $(date +'%Y-%m-%d %H:%M')" && git push)
