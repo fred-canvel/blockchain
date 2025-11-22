@@ -7,7 +7,7 @@ import CryptoAnalysis from './pages/CryptoAnalysis';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/blockchain">
       <div className="app">
         <Navbar />
         <Routes>
