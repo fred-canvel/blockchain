@@ -139,6 +139,12 @@ async function main() {
     try {
         const posts = JSON.parse(await fs.readFile(POSTS_FILE_PATH, 'utf8'));
         posts.unshift(newPost); // Add to the beginning
+
+        // Keep only the last 100 posts
+        if (posts.length > 100) {
+            posts.length = 100;
+        }
+
         await fs.writeFile(POSTS_FILE_PATH, JSON.stringify(posts, null, 2));
         console.log('Successfully generated and saved new post!');
     } catch (error) {
