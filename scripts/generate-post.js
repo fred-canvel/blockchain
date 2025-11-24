@@ -27,8 +27,8 @@ async function fetchNews() {
         const response = await axios.get(NEWS_API_URL);
         const news = response.data.Data;
 
-        // Return the first article that has an image and body
-        return news.find(article => article.imageurl && article.body.length > 100);
+        // Return the first article that has an image, body, and url
+        return news.find(article => article.imageurl && article.body.length > 100 && article.url);
     } catch (error) {
         console.error('Error fetching news:', error.message);
         return null;
@@ -104,22 +104,40 @@ async function generateImage(topic) {
 }
 
 async function main() {
-    // 1. Fetch News
+    // 1. Read existing posts to check for duplicates
+    let posts = [];
+    try {
+        const fileContent = await fs.readFile(POSTS_FILE_PATH, 'utf8');
+        posts = JSON.parse(fileContent);
+    } catch (error) {
+        console.log('No existing posts found or error reading file. Starting fresh.');
+    }
+
+    // 2. Fetch News
     const article = await fetchNews();
     if (!article) {
         console.log('No suitable news found.');
         return;
     }
 
-    // 2. Generate Text Content
+    // Check if this article has already been posted
+    // We check if any existing post has the same source URL
+    const isDuplicate = posts.some(post => post.sourceUrl === article.url);
+
+    if (isDuplicate) {
+        console.log(`Skipping duplicate article: "${article.title}"`);
+        return;
+    }
+
+    // 3. Generate Text Content
     const generatedContent = await generateContent(article);
     if (!generatedContent) return;
 
-    // 3. Generate Image
+    // 4. Generate Image
     // We use the English title for better image generation prompts
     const imageUrl = await generateImage(article.title);
 
-    // 4. Create Post Object
+    // 5. Create Post Object
     const now = new Date();
     const dateOptions = { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/New_York' };
     const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'America/New_York' };
@@ -133,15 +151,15 @@ async function main() {
         readTime: generatedContent.readTime,
         date: `${now.toLocaleDateString('es-ES', dateOptions)} • ${now.toLocaleTimeString('es-ES', timeOptions)} EST`,
         image: imageUrl,
+        sourceUrl: article.url, // Save source URL to prevent duplicates
         author: {
             name: "fredcanvel",
             avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=fredcanvel"
         }
     };
 
-    // 5. Save to File
+    // 6. Save to File
     try {
-        const posts = JSON.parse(await fs.readFile(POSTS_FILE_PATH, 'utf8'));
         posts.unshift(newPost); // Add to the beginning
 
         // Keep only the last 96 posts
