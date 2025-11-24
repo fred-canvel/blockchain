@@ -125,8 +125,8 @@ const Hero = () => {
                 </div>
 
                 <h1 className="hero-title">
-                    Descentraliza <br />
-                    <span className="gradient-text">Tu Realidad</span>
+                    Impulsando <br />
+                    <span className="gradient-text">la Economía Digital</span>
                 </h1>
 
                 <p className="hero-desc">

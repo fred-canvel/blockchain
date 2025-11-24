@@ -9,7 +9,7 @@ const Footer = () => {
                 <div className="footer-grid">
                     <div className="col-span-1 md:col-span-2">
                         <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>
-                            FRED<span style={{ color: 'var(--primary)' }}>CHAINVEL</span>.IO
+                            CANVEL<span style={{ color: 'var(--primary)' }}>CHAIN</span>.IO
                         </h3>
                         <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', maxWidth: '400px' }}>
                             Empoderando a la próxima generación de internet. Brindamos las últimas noticias, análisis y contenido educativo para el mundo descentralizado.
@@ -55,7 +55,7 @@ const Footer = () => {
                 </div>
 
                 <div className="footer-bottom">
-                    <p>&copy; 2024 Fredchainvel.io. Todos los derechos reservados.</p>
+                    <p>&copy; 2025 CANVELCHAIN.IO. Todos los derechos reservados.</p>
                     <div style={{ display: 'flex', gap: '1.5rem' }}>
                         <a href="#">Política de Privacidad</a>
                         <a href="#">Términos de Servicio</a>

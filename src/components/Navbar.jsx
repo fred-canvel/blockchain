@@ -19,7 +19,7 @@ const Navbar = () => {
             <div className="container nav-content">
                 <div className="logo">
                     <Hexagon size={32} color="#00f3ff" />
-                    <div>FRED<span>CHAINVEL</span>.IO</div>
+                    <div>CANVEL<span>CHAIN</span>.IO</div>
                 </div>
 
                 {/* Desktop Menu */}
