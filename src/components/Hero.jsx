@@ -134,7 +134,11 @@ const Hero = () => {
                 </p>
 
                 <div className="hero-buttons">
-                    <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <button
+                        className="btn-primary"
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                        onClick={() => document.getElementById('latest')?.scrollIntoView({ behavior: 'smooth' })}
+                    >
                         Empezar a Leer <ArrowRight size={20} />
                     </button>
 
