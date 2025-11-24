@@ -55,7 +55,8 @@ async function generateContent(article) {
       2. **Engaging Excerpt**: A 2-sentence hook.
       3. **Full Content**:
          - Write a fluid, engaging article without using explicit subtitles like "Introduction", "The Core Update", etc.
-         - Use paragraphs <p> to separate ideas.
+         - **CRITICAL**: Use multiple <p> tags to separate ideas. Do not put everything in one big paragraph.
+         - Example: <p>First idea...</p><p>Second idea...</p>
          - You can use <strong> for emphasis but avoid <h3> headers for sections unless absolutely necessary for a list.
          - The flow should be: Context -> Core News -> Analysis -> Future Outlook -> Conclusion, but woven together naturally.
       
@@ -120,8 +121,8 @@ async function main() {
 
     // 4. Create Post Object
     const now = new Date();
-    const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
-    const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+    const dateOptions = { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/New_York' };
+    const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'America/New_York' };
 
     const newPost = {
         id: Date.now(), // Simple unique ID
@@ -130,7 +131,7 @@ async function main() {
         content: generatedContent.content, // Added full content
         category: generatedContent.category,
         readTime: generatedContent.readTime,
-        date: `${now.toLocaleDateString('es-ES', dateOptions)} • ${now.toLocaleTimeString('es-ES', timeOptions)}`,
+        date: `${now.toLocaleDateString('es-ES', dateOptions)} • ${now.toLocaleTimeString('es-ES', timeOptions)} EST`,
         image: imageUrl,
         author: {
             name: "fredcanvel",
