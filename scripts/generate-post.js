@@ -319,7 +319,7 @@ async function main() {
                 sourceUrl: article.url, // Save source URL to prevent duplicates
                 author: {
                     name: "fredcanvel",
-                    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=fredcanvel"
+                    avatar: "https://cdn-icons-png.flaticon.com/512/3540/3540784.png"
                 }
             };
 
