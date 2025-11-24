@@ -54,17 +54,16 @@ async function generateContent(article) {
       1. **Catchy Title**: A headline that grabs attention.
       2. **Engaging Excerpt**: A 2-sentence hook.
       3. **Full Content**:
-         - **Introduction**: Set the context and why this news is breaking.
-         - **The Core Update**: Explain the technical or market details clearly.
-         - **Why It Matters (Analysis)**: Deep dive into the implications for the industry/market.
-         - **Future Outlook**: Speculation or prediction based on this event.
-         - **Conclusion**: A strong closing thought.
+         - Write a fluid, engaging article without using explicit subtitles like "Introduction", "The Core Update", etc.
+         - Use paragraphs <p> to separate ideas.
+         - You can use <strong> for emphasis but avoid <h3> headers for sections unless absolutely necessary for a list.
+         - The flow should be: Context -> Core News -> Analysis -> Future Outlook -> Conclusion, but woven together naturally.
       
       Output format (JSON):
       {
         "title": "Spanish Title",
         "excerpt": "Spanish Excerpt",
-        "content": "<p>Intro...</p><h3>El Núcleo de la Noticia</h3><p>Details...</p><h3>Análisis de Impacto</h3><p>Analysis...</p>...",
+        "content": "<p>Paragraph 1...</p><p>Paragraph 2...</p>...",
         "category": "Select one: DeFi, NFTs, Metaverse, Web3, Tech, Eco",
         "readTime": "X min lectura"
       }
@@ -120,6 +119,10 @@ async function main() {
     const imageUrl = await generateImage(article.title);
 
     // 4. Create Post Object
+    const now = new Date();
+    const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+    const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+
     const newPost = {
         id: Date.now(), // Simple unique ID
         title: generatedContent.title,
@@ -127,7 +130,7 @@ async function main() {
         content: generatedContent.content, // Added full content
         category: generatedContent.category,
         readTime: generatedContent.readTime,
-        date: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
+        date: `${now.toLocaleDateString('es-ES', dateOptions)} • ${now.toLocaleTimeString('es-ES', timeOptions)}`,
         image: imageUrl,
         author: {
             name: "fredcanvel",
@@ -140,9 +143,9 @@ async function main() {
         const posts = JSON.parse(await fs.readFile(POSTS_FILE_PATH, 'utf8'));
         posts.unshift(newPost); // Add to the beginning
 
-        // Keep only the last 100 posts
-        if (posts.length > 100) {
-            posts.length = 100;
+        // Keep only the last 96 posts
+        if (posts.length > 96) {
+            posts.length = 96;
         }
 
         await fs.writeFile(POSTS_FILE_PATH, JSON.stringify(posts, null, 2));

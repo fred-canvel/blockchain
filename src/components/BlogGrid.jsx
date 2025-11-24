@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const BlogGrid = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const postsPerPage = 5;
+    const postsPerPage = 6;
 
     // Calculate indexes for pagination
     const indexOfLastPost = currentPage * postsPerPage;
