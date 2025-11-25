@@ -38,6 +38,10 @@ const Navbar = () => {
                         Crypto Análisis
                     </Link>
 
+                    <Link to="/calculators" className="nav-link" style={{ color: '#a855f7', fontWeight: 'bold' }}>
+                        Calculadoras
+                    </Link>
+
                     <button className="btn-primary">
                         Conectar Billetera
                     </button>
@@ -80,6 +84,13 @@ const Navbar = () => {
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
                         Crypto Análisis
+                    </Link>
+                    <Link
+                        to="/calculators"
+                        style={{ fontSize: '1.2rem', color: '#a855f7', fontWeight: 'bold' }}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        Calculadoras
                     </Link>
                 </div>
             )}

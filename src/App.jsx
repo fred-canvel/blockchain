@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import CryptoAnalysis from './pages/CryptoAnalysis';
+import Calculators from './pages/Calculators';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/analysis" element={<CryptoAnalysis />} />
+          <Route path="/calculators" element={<Calculators />} />
         </Routes>
         <Footer />
       </div>
