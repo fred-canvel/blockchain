@@ -83,30 +83,17 @@ async function generateContent(article) {
     }
 }
 
-async function generateImage(postId) {
-    // Use Unsplash Source API with crypto/blockchain keywords
-    // The sig parameter acts as a cache buster/seed to get consistent images
-    // We rotate through different crypto-related keywords for variety
-    const keywords = [
-        'cryptocurrency',
-        'blockchain',
-        'bitcoin',
-        'technology',
-        'finance',
-        'digital',
-        'network',
-        'data'
-    ];
+async function getArticleImage(article) {
+    // Use the original image from the news article
+    // The news API already provides relevant images
+    if (article.imageurl) {
+        console.log(`Using original article image: ${article.imageurl}`);
+        return article.imageurl;
+    }
 
-    // Use postId to select a keyword consistently for this post
-    const keywordIndex = postId % keywords.length;
-    const keyword = keywords[keywordIndex];
-
-    // Unsplash Source API with sig parameter for consistency
-    const imageUrl = `https://source.unsplash.com/1024x1024/?${keyword}&sig=${postId}`;
-
-    console.log(`Generated stable themed image URL for post ${postId} with keyword: ${keyword}`);
-    return imageUrl;
+    // Fallback to a static Unsplash image if no image in article
+    console.log('No image in article, using fallback');
+    return 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=1024';
 }
 
 async function main() {
@@ -135,7 +122,7 @@ async function main() {
         return;
     }
 
-    // 3. Create Post Object (Generate ID first to use for image seed)
+    // 3. Create Post Object
     const now = new Date();
     const postId = Date.now();
     const dateOptions = { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/New_York' };
@@ -145,9 +132,8 @@ async function main() {
     const generatedContent = await generateContent(article);
     if (!generatedContent) return;
 
-    // 5. Generate Image
-    // Pass postId to ensure stable, themed image per post
-    const imageUrl = await generateImage(postId);
+    // 5. Get Article Image
+    const imageUrl = await getArticleImage(article);
 
     const newPost = {
         id: postId,
