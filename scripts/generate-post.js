@@ -83,13 +83,29 @@ async function generateContent(article) {
     }
 }
 
-async function generateImage(topic, postId) {
-    // Use Picsum Photos with seed for stable, unique images
-    // The seed ensures the same image is returned for the same postId
-    // Picsum provides random but consistent images based on seed
-    const imageUrl = `https://picsum.photos/seed/${postId}/1024/1024`;
+async function generateImage(postId) {
+    // Use Unsplash Source API with crypto/blockchain keywords
+    // The sig parameter acts as a cache buster/seed to get consistent images
+    // We rotate through different crypto-related keywords for variety
+    const keywords = [
+        'cryptocurrency',
+        'blockchain',
+        'bitcoin',
+        'technology',
+        'finance',
+        'digital',
+        'network',
+        'data'
+    ];
 
-    console.log(`Generated stable image URL for post ${postId}`);
+    // Use postId to select a keyword consistently for this post
+    const keywordIndex = postId % keywords.length;
+    const keyword = keywords[keywordIndex];
+
+    // Unsplash Source API with sig parameter for consistency
+    const imageUrl = `https://source.unsplash.com/1024x1024/?${keyword}&sig=${postId}`;
+
+    console.log(`Generated stable themed image URL for post ${postId} with keyword: ${keyword}`);
     return imageUrl;
 }
 
@@ -130,8 +146,8 @@ async function main() {
     if (!generatedContent) return;
 
     // 5. Generate Image
-    // Pass postId to ensure stable, unique image per post
-    const imageUrl = await generateImage(article.title, postId);
+    // Pass postId to ensure stable, themed image per post
+    const imageUrl = await generateImage(postId);
 
     const newPost = {
         id: postId,
