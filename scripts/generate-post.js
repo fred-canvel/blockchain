@@ -85,15 +85,25 @@ async function generateContent(article) {
 
 async function generateImage(topic) {
     try {
-        console.log(`Generating image for topic: "${topic}"...`);
+        // Truncate topic to avoid URL length issues
+        const safeTopic = topic.length > 100 ? topic.substring(0, 100) + '...' : topic;
+        console.log(`Generating image for topic: "${safeTopic}"...`);
 
         // Create a prompt for Pollinations.ai
-        const basePrompt = `Cyberpunk style digital art illustration of ${topic}, neon colors, futuristic, high quality, 4k, blockchain theme, dark background`;
+        const basePrompt = `Cyberpunk style digital art illustration of ${safeTopic}, neon colors, futuristic, high quality, 4k, blockchain theme, dark background`;
         const encodedPrompt = encodeURIComponent(basePrompt);
 
         // Construct the URL
         // width=1024, height=1024, nologo=true (to avoid watermarks if possible/supported)
         const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&nologo=true`;
+
+        // Validate the image URL
+        try {
+            await axios.head(imageUrl);
+        } catch (validationError) {
+            console.warn('Image validation failed, using fallback:', validationError.message);
+            throw new Error('Image validation failed');
+        }
 
         return imageUrl;
     } catch (error) {
