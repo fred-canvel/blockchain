@@ -83,7 +83,7 @@ async function generateContent(article) {
     }
 }
 
-async function generateImage(topic) {
+async function generateImage(topic, postId) {
     try {
         // Truncate topic to avoid URL length issues
         const safeTopic = topic.length > 100 ? topic.substring(0, 100) + '...' : topic;
@@ -94,9 +94,9 @@ async function generateImage(topic) {
         const encodedPrompt = encodeURIComponent(safeTopic);
         const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}`;
 
-        // Validate the image URL
+        // Validate the image URL using GET (HEAD is unreliable on Pollinations)
         try {
-            await axios.head(imageUrl);
+            await axios.get(imageUrl);
         } catch (validationError) {
             console.warn('Image validation failed, using fallback:', validationError.message);
             throw new Error('Image validation failed');
@@ -105,8 +105,8 @@ async function generateImage(topic) {
         return imageUrl;
     } catch (error) {
         console.error('Error generating image:', error.message);
-        // Fallback to LoremFlickr for dynamic blockchain/crypto images
-        return `https://loremflickr.com/1024/1024/blockchain,crypto?random=${Date.now()}`;
+        // Fallback to LoremFlickr with LOCK to ensure stable image per post
+        return `https://loremflickr.com/1024/1024/blockchain,crypto?lock=${postId}`;
     }
 }
 
@@ -136,21 +136,22 @@ async function main() {
         return;
     }
 
-    // 3. Generate Text Content
-    const generatedContent = await generateContent(article);
-    if (!generatedContent) return;
-
-    // 4. Generate Image
-    // We use the English title for better image generation prompts
-    const imageUrl = await generateImage(article.title);
-
-    // 5. Create Post Object
+    // 3. Create Post Object (Generate ID first to use for image lock)
     const now = new Date();
+    const postId = Date.now();
     const dateOptions = { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/New_York' };
     const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'America/New_York' };
 
+    // 4. Generate Text Content
+    const generatedContent = await generateContent(article);
+    if (!generatedContent) return;
+
+    // 5. Generate Image
+    // Pass postId to ensure stable fallback image
+    const imageUrl = await generateImage(article.title, postId);
+
     const newPost = {
-        id: Date.now(), // Simple unique ID
+        id: postId,
         title: generatedContent.title,
         excerpt: generatedContent.excerpt,
         content: generatedContent.content, // Added full content
