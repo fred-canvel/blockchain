@@ -89,13 +89,10 @@ async function generateImage(topic) {
         const safeTopic = topic.length > 100 ? topic.substring(0, 100) + '...' : topic;
         console.log(`Generating image for topic: "${safeTopic}"...`);
 
-        // Create a prompt for Pollinations.ai
-        const basePrompt = `Cyberpunk style digital art illustration of ${safeTopic}, neon colors, futuristic, high quality, 4k, blockchain theme, dark background`;
-        const encodedPrompt = encodeURIComponent(basePrompt);
-
-        // Construct the URL
-        // width=1024, height=1024, nologo=true (to avoid watermarks if possible/supported)
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&nologo=true`;
+        // Use SIMPLE prompt to avoid 500 errors (complex prompts are failing)
+        // Also removed query params like nologo as they were causing 500s
+        const encodedPrompt = encodeURIComponent(safeTopic);
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}`;
 
         // Validate the image URL
         try {
@@ -108,8 +105,8 @@ async function generateImage(topic) {
         return imageUrl;
     } catch (error) {
         console.error('Error generating image:', error.message);
-        // Fallback to a random tech image if generation fails
-        return "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800";
+        // Fallback to LoremFlickr for dynamic blockchain/crypto images
+        return `https://loremflickr.com/1024/1024/blockchain,crypto?random=${Date.now()}`;
     }
 }
 
