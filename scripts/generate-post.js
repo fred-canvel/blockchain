@@ -84,30 +84,13 @@ async function generateContent(article) {
 }
 
 async function generateImage(topic, postId) {
-    try {
-        // Truncate topic to avoid URL length issues
-        const safeTopic = topic.length > 100 ? topic.substring(0, 100) + '...' : topic;
-        console.log(`Generating image for topic: "${safeTopic}"...`);
+    // Use Picsum Photos with seed for stable, unique images
+    // The seed ensures the same image is returned for the same postId
+    // Picsum provides random but consistent images based on seed
+    const imageUrl = `https://picsum.photos/seed/${postId}/1024/1024`;
 
-        // Use SIMPLE prompt to avoid 500 errors (complex prompts are failing)
-        // Also removed query params like nologo as they were causing 500s
-        const encodedPrompt = encodeURIComponent(safeTopic);
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}`;
-
-        // Validate the image URL using GET (HEAD is unreliable on Pollinations)
-        try {
-            await axios.get(imageUrl);
-        } catch (validationError) {
-            console.warn('Image validation failed, using fallback:', validationError.message);
-            throw new Error('Image validation failed');
-        }
-
-        return imageUrl;
-    } catch (error) {
-        console.error('Error generating image:', error.message);
-        // Fallback to LoremFlickr with LOCK to ensure stable image per post
-        return `https://loremflickr.com/1024/1024/blockchain,crypto?lock=${postId}`;
-    }
+    console.log(`Generated stable image URL for post ${postId}`);
+    return imageUrl;
 }
 
 async function main() {
@@ -136,7 +119,7 @@ async function main() {
         return;
     }
 
-    // 3. Create Post Object (Generate ID first to use for image lock)
+    // 3. Create Post Object (Generate ID first to use for image seed)
     const now = new Date();
     const postId = Date.now();
     const dateOptions = { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/New_York' };
@@ -147,19 +130,19 @@ async function main() {
     if (!generatedContent) return;
 
     // 5. Generate Image
-    // Pass postId to ensure stable fallback image
+    // Pass postId to ensure stable, unique image per post
     const imageUrl = await generateImage(article.title, postId);
 
     const newPost = {
         id: postId,
         title: generatedContent.title,
         excerpt: generatedContent.excerpt,
-        content: generatedContent.content, // Added full content
+        content: generatedContent.content,
         category: generatedContent.category,
         readTime: generatedContent.readTime,
         date: `${now.toLocaleDateString('es-ES', dateOptions)} • ${now.toLocaleTimeString('es-ES', timeOptions)} EST`,
         image: imageUrl,
-        sourceUrl: article.url, // Save source URL to prevent duplicates
+        sourceUrl: article.url,
         author: {
             name: "fredcanvel",
             avatar: "https://cdn-icons-png.flaticon.com/512/3540/3540784.png"
