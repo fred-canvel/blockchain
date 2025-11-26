@@ -83,17 +83,36 @@ async function generateContent(article) {
     }
 }
 
-async function getArticleImage(article) {
-    // Use the original image from the news article
-    // The news API already provides relevant images
-    if (article.imageurl) {
+function getArticleImage(article, postId) {
+    // Check if article has an image and it's not the default CryptoCompare image
+    if (article.imageurl && !article.imageurl.includes('default.png')) {
         console.log(`Using original article image: ${article.imageurl}`);
         return article.imageurl;
     }
 
-    // Fallback to a static Unsplash image if no image in article
-    console.log('No image in article, using fallback');
-    return 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=1024';
+    // If it's the default image or no image, generate a unique one based on postId
+    console.log('Default or no image detected, generating unique image based on post ID');
+
+    // Use Unsplash with a random seed based on postId to get unique crypto-related images
+    const imageTopics = [
+        'cryptocurrency',
+        'blockchain',
+        'bitcoin',
+        'ethereum',
+        'trading',
+        'finance',
+        'technology',
+        'digital',
+        'network',
+        'data'
+    ];
+
+    // Select a topic based on postId to ensure variety
+    const topicIndex = postId % imageTopics.length;
+    const topic = imageTopics[topicIndex];
+
+    // Use postId as seed for consistent but unique images
+    return `https://source.unsplash.com/1200x630/?${topic}&sig=${postId}`;
 }
 
 async function main() {
@@ -132,8 +151,8 @@ async function main() {
     const generatedContent = await generateContent(article);
     if (!generatedContent) return;
 
-    // 5. Get Article Image
-    const imageUrl = await getArticleImage(article);
+    // 5. Get Article Image (pass postId for unique image generation)
+    const imageUrl = getArticleImage(article, postId);
 
     const newPost = {
         id: postId,
