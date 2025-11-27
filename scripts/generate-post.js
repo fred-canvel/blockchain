@@ -48,11 +48,10 @@ Contenido: ${article.body}
 
 INSTRUCCIONES DE FORMATO (CRÍTICO):
 1. **NO USES MARKDOWN**: Prohibido usar asteriscos (**texto**) o guiones bajos (__texto__). El texto saldrá roto si los usas.
-2. **SOLO HTML VÁLIDO**: Usa únicamente etiquetas HTML estándar.
-3. **RESALTADO DE TEXTO**:
-   - Para resaltar cifras, porcentajes o activos importantes, USA ESTA ETIQUETA EXACTA:
-   - <span style="color: rgb(0, 243, 255);">TEXTO A RESALTAR</span>
-   - NO uses <strong> ni <b>. Usa solo el <span> con color.
+2. **SOLO HTML VÁLIDO EN "CONTENT"**: Usa etiquetas HTML estándar.
+3. **RESALTADO (SOLO EN "CONTENT")**:
+   - Para cifras y datos clave usa: <span style="color: rgb(0, 243, 255);">DATOS</span>
+   - NO uses <strong> ni <b>.
 
 ESTRUCTURA DEL ARTÍCULO:
 1. **CONTEXTO Y RELEVANCIA**
@@ -81,23 +80,19 @@ ESTRUCTURA DEL ARTÍCULO:
 6. **CONCLUSIÓN PROFESIONAL**
    - Reflexión final sobre las implicaciones a largo plazo.
 
-REQUISITOS VISUALES (IMPORTANTE):
-- Usa **<h3>** para los títulos de las secciones (ej: "<h3>📊 Análisis de Impacto</h3>").
-- **IMPORTANTE**: Asegúrate de que haya un salto de línea visual después de cada título <h3>.
-- Usa **<ul>** y **<li>** para listas (especialmente en "Factores a Monitorear").
-- Usa **<blockquote>** para resaltar una frase clave o conclusión impactante.
-- Párrafos cortos y digeribles (máximo 3-4 líneas por párrafo).
-
-ESTILO DE ESCRITURA:
-- Idioma: Español (España/Latinoamérica profesional).
-- Tono: Analítico, experto, objetivo.
-- **Evita**: Bloques de texto interminables. El lector debe poder escanear el artículo.
+REQUISITOS VISUALES Y ESPACIADO (MUY IMPORTANTE):
+- **TÍTULOS**: Usa <h3> con emojis. EJEMPLO: <h3>📊 Análisis</h3>
+- **ESPACIADO**: DEBES añadir un tag **<br>** inmediatamente después de cada cierre de título </h3>.
+  - Ejemplo correcto: </h3><br><p>Texto...</p>
+- **PÁRRAFOS**: Usa <p> para cada párrafo. Si hay varios párrafos seguidos, sepáralos bien.
+- **LISTAS**: Usa <ul> y <li>.
+- **CITAS**: Usa <blockquote> para resaltar una frase clave.
 
 OUTPUT JSON:
 {
   "title": "Título profesional y atractivo (con gancho analítico)",
-  "excerpt": "Resumen ejecutivo de 2-3 frases con las métricas clave.",
-  "content": "<h3>🌍 Contexto de Mercado</h3><p>...</p><h3>📉 Análisis Técnico</h3><p>...</p><ul><li>...</li></ul>...",
+  "excerpt": "Resumen ejecutivo de 2-3 frases. TEXTO PLANO OBLIGATORIO. PROHIBIDO USAR HTML, TAGS O SPANS AQUÍ. Solo texto puro.",
+  "content": "<h3>🌍 Contexto de Mercado</h3><br><p>...</p><br><h3>📉 Análisis Técnico</h3><br><p>...</p><ul><li>...</li></ul>...",
   "category": "Selecciona: DeFi, NFTs, Metaverse, Web3, Tech, Eco, Regulación, Mercados",
   "readTime": "X min lectura"
 }
