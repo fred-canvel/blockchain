@@ -79,6 +79,7 @@ Tu rol es el de un analista profesional que no solo informa, sino que interpreta
 REQUISITOS DE FORMATO Y VISUALES (IMPORTANTE):
 - **NO** entregues texto plano. Usa HTML para estructurar visualmente.
 - Usa **<h3>** para los títulos de las secciones (ej: "<h3>📊 Análisis de Impacto</h3>").
+- **IMPORTANTE**: Asegúrate de que haya un salto de línea visual después de cada título <h3>.
 - Usa **<ul>** y **<li>** para listas (especialmente en "Factores a Monitorear").
 - Usa **<strong>** para resaltar TODAS las cifras, porcentajes y nombres de activos importantes.
 - Usa **<blockquote>** para resaltar una frase clave o conclusión impactante.
@@ -132,26 +133,11 @@ function getArticleImage(article, postId) {
     // If it's the default image or no image, generate a unique one based on postId
     console.log('Default or no image detected, generating unique image based on post ID');
 
-    // Use Unsplash with a random seed based on postId to get unique crypto-related images
-    const imageTopics = [
-        'cryptocurrency',
-        'blockchain',
-        'bitcoin',
-        'ethereum',
-        'trading',
-        'finance',
-        'technology',
-        'digital',
-        'network',
-        'data'
-    ];
-
-    // Select a topic based on postId to ensure variety
-    const topicIndex = postId % imageTopics.length;
-    const topic = imageTopics[topicIndex];
-
-    // Use postId as seed for consistent but unique images
-    return `https://source.unsplash.com/1200x630/?${topic}&sig=${postId}`;
+    // Use Pollinations.ai for reliable AI image generation based on the article title/topic
+    // This replaces the deprecated source.unsplash.com
+    const cleanTitle = article.title.replace(/[^a-zA-Z0-9 ]/g, '').substring(0, 100);
+    const encodedPrompt = encodeURIComponent(`${cleanTitle} crypto blockchain futuristic neon style high quality`);
+    return `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1200&height=630&nologo=true`;
 }
 
 async function main() {
