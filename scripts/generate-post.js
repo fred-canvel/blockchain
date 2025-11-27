@@ -37,43 +37,88 @@ async function fetchNews() {
 
 async function generateContent(article) {
     try {
-        console.log(`Generating content for: "${article.title}"...`);
+        console.log(`Generating professional analysis for: "${article.title}"...`);
 
         const prompt = `
-      You are an expert crypto journalist and thought leader. Write a comprehensive, high-impact blog post based on this news article.
-      
-      Article Title: ${article.title}
-      Article Body: ${article.body}
-      
-      Requirements:
-      - Language: Spanish
-      - Tone: Professional, insightful, visionary, and engaging.
-      - Format: The 'content' field must be valid HTML (paragraphs <p>, headers <h3>, lists <ul>/<li>).
-      
-      Structure:
-      1. **Catchy Title**: A headline that grabs attention.
-      2. **Engaging Excerpt**: A 2-sentence hook.
-      3. **Full Content**:
-         - Write a fluid, engaging article without using explicit subtitles like "Introduction", "The Core Update", etc.
-         - **CRITICAL**: Use multiple <p> tags to separate ideas. Do not put everything in one big paragraph.
-         - Example: <p>First idea...</p><p>Second idea...</p>
-         - You can use <strong> for emphasis but avoid <h3> headers for sections unless absolutely necessary for a list.
-         - The flow should be: Context -> Core News -> Analysis -> Future Outlook -> Conclusion, but woven together naturally.
-      
-      Output format (JSON):
-      {
-        "title": "Spanish Title",
-        "excerpt": "Spanish Excerpt",
-        "content": "<p>Paragraph 1...</p><p>Paragraph 2...</p>...",
-        "category": "Select one: DeFi, NFTs, Metaverse, Web3, Tech, Eco",
-        "readTime": "X min lectura"
-      }
+Eres un analista financiero senior especializado en criptomonedas y tecnología blockchain, con más de 10 años de experiencia en mercados digitales. Tu trabajo es crear análisis profundos y profesionales que combinen periodismo de investigación con insights de mercado.
+
+NOTICIA FUENTE:
+Título: ${article.title}
+Contenido: ${article.body}
+
+INSTRUCCIONES PARA EL ANÁLISIS:
+
+Tu rol es el de un analista profesional que no solo informa, sino que interpreta, analiza y proyecta. Debes crear un artículo extenso y detallado que incluya:
+
+1. **CONTEXTO Y RELEVANCIA** (2-3 párrafos)
+   - Sitúa la noticia en el contexto actual del mercado cripto
+   - Explica por qué esta noticia es importante AHORA
+   - Conecta con tendencias macro del sector
+
+2. **ANÁLISIS DETALLADO** (3-4 párrafos)
+   - Desglosa los aspectos técnicos y fundamentales de la noticia
+   - Analiza las implicaciones para diferentes stakeholders (inversores, desarrolladores, instituciones)
+   - Identifica factores clave que podrían influir en el desarrollo de esta situación
+   - Usa datos, métricas o comparaciones cuando sea relevante
+
+3. **IMPACTO EN EL MERCADO** (2-3 párrafos)
+   - Analiza cómo esta noticia puede afectar los precios y la volatilidad
+   - Identifica qué activos o sectores podrían verse más impactados
+   - Considera escenarios alcistas y bajistas
+   - Menciona posibles reacciones institucionales o regulatorias
+
+4. **PERSPECTIVA TÉCNICA** (1-2 párrafos)
+   - Si aplica, analiza aspectos tecnológicos o de infraestructura
+   - Evalúa la viabilidad técnica o innovación presentada
+   - Compara con soluciones o situaciones similares en el pasado
+
+5. **PROYECCIÓN Y CONCLUSIÓN** (2 párrafos)
+   - Ofrece una visión sobre posibles desarrollos futuros
+   - Proporciona puntos clave que los lectores deben monitorear
+   - Concluye con una reflexión profesional sobre las implicaciones a largo plazo
+
+REQUISITOS DE FORMATO:
+- Idioma: Español (España/Latinoamérica profesional)
+- Tono: Analítico, profesional, objetivo pero con perspectiva experta
+- Longitud: Mínimo 8-12 párrafos bien desarrollados
+- HTML: Usa MÚLTIPLES etiquetas <p> (una por cada párrafo). CRÍTICO: NO pongas todo en un solo <p>
+- Énfasis: Usa <strong> para términos clave o cifras importantes
+- Listas: Usa <ul> y <li> solo si presentas puntos específicos (ej: factores a monitorear)
+- NO uses subtítulos explícitos como <h3>. El flujo debe ser natural y continuo
+- Evita frases genéricas. Sé específico y aporta valor analítico real
+
+ESTILO DE ESCRITURA:
+- Primera frase: Impactante y que capte atención
+- Párrafos: Bien estructurados, cada uno con una idea clara
+- Transiciones: Fluidas entre secciones
+- Datos: Incluye cuando sea posible (porcentajes, comparaciones, cifras)
+- Evita: Lenguaje sensacionalista o clickbait
+- Prefiere: Análisis fundamentado y perspectiva profesional
+
+OUTPUT JSON:
+{
+  "title": "Título profesional y descriptivo en español (no clickbait, pero atractivo)",
+  "excerpt": "Resumen ejecutivo de 2-3 frases que capture la esencia del análisis y su relevancia",
+  "content": "<p>Párrafo 1...</p><p>Párrafo 2...</p><p>Párrafo 3...</p>... (mínimo 8 párrafos)",
+  "category": "Selecciona la más apropiada: DeFi, NFTs, Metaverse, Web3, Tech, Eco, Regulación, Mercados",
+  "readTime": "X min lectura" (calcula basado en ~200 palabras/min)
+}
     `;
 
         const completion = await openai.chat.completions.create({
-            messages: [{ role: "system", content: "You are a helpful assistant that outputs JSON." }, { role: "user", content: prompt }],
-            model: "gpt-3.5-turbo",
+            messages: [
+                {
+                    role: "system",
+                    content: "Eres un analista financiero senior especializado en criptomonedas. Generas análisis profundos en formato JSON. Siempre proporcionas contenido extenso, detallado y profesional con múltiples párrafos bien estructurados."
+                },
+                {
+                    role: "user",
+                    content: prompt
+                }
+            ],
+            model: "gpt-4o",
             response_format: { type: "json_object" },
+            temperature: 0.7,
         });
 
         return JSON.parse(completion.choices[0].message.content);
