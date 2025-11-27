@@ -2,22 +2,10 @@ name: Auto Generate Blog Posts
 
 on:
   schedule:
-    # Estrategia de publicación: 5 veces al día para cubrir sesiones globales y volatilidad.
-    
-    # 00:00 EST (05:00 UTC) - Inicio de jornada / Cierre previo
-    - cron: '0 5 * * *'
-    
-    # 08:00 EST (13:00 UTC) - Pre-mercado Nueva York (Alta relevancia)
-    - cron: '0 13 * * *'
+    # Publicación diaria: 1 vez al día
     
     # 12:00 EST (17:00 UTC) - Mitad de sesión NY / Actualización mediodía
     - cron: '0 17 * * *'
-    
-    # 16:00 EST (21:00 UTC) - Cierre mercado NY / Resumen jornada
-    - cron: '0 21 * * *'
-    
-    # 20:00 EST (01:00 UTC) - Apertura mercados asiáticos (Volatilidad nocturna)
-    - cron: '0 1 * * *'
   
   # Permite ejecutar manualmente desde GitHub
   workflow_dispatch:
